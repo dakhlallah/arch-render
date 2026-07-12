@@ -16,16 +16,22 @@ Aspect:
   and crop survive. This is load-bearing: the skill's Preservation Contract forbids re-framing an
   input. Only pass an explicit ratio when the user asks to reframe.
 
+Streaming is ON by default (--no-stream to disable). A quality=high render can take longer than
+60s to return, and any network path with a ~60s idle timeout will drop a silent connection before
+the first byte arrives. Streaming partial images keeps bytes flowing so the connection stays alive.
+
 API facts (probed 2026-07-11, gpt-image-2):
   - width and height must each be divisible by 16
   - longest edge <= 3840
   - quality: low | medium | high | auto
+  - stream + partial_images work on both /generations and /edits (probed 2026-07-12)
 
 Key: $OPENAI_API_KEY. No key is bundled with this skill.
 """
 
 import argparse
 import base64
+import http.client
 import io
 import json
 import mimetypes
@@ -148,7 +154,41 @@ def multipart(fields, files):
     return buf.getvalue(), f"multipart/form-data; boundary={boundary}"
 
 
-def call(url, body, content_type, key):
+def read_stream(resp):
+    """Consume the SSE stream and return the final image event.
+
+    Streaming is not a nicety: a `quality=high` render can take well over 60s to produce
+    a response, and any network path with a ~60s idle timeout (router, ISP, corporate
+    proxy) will drop a silent connection before the first byte lands. Partial-image
+    events keep bytes flowing, so the connection never goes idle.
+    """
+    final = None
+    for raw in resp:
+        line = raw.decode("utf-8", "ignore").strip()
+        if not line.startswith("data:"):
+            continue
+        payload = line[5:].strip()
+        if not payload or payload == "[DONE]":
+            continue
+        try:
+            event = json.loads(payload)
+        except ValueError:
+            continue
+        # /generations emits image_generation.*, /edits emits image_edit.* — match on the suffix.
+        etype = event.get("type", "")
+        if etype.endswith(".partial_image"):
+            print(f"  … partial {event.get('partial_image_index', 0) + 1}", file=sys.stderr)
+        elif etype.endswith(".completed"):
+            final = event
+        elif etype == "error":
+            msg = (event.get("error") or {}).get("message") or json.dumps(event)[:400]
+            sys.exit(f"ERROR: OpenAI streamed an error\n{msg}")
+    if not final:
+        sys.exit("ERROR: stream ended without a completed image.")
+    return {"data": [final]}
+
+
+def call(url, body, content_type, key, stream=False):
     for attempt in range(1, MAX_ATTEMPTS + 1):
         req = urllib.request.Request(
             url, data=body, method="POST",
@@ -156,7 +196,24 @@ def call(url, body, content_type, key):
         )
         try:
             with urllib.request.urlopen(req, timeout=300) as resp:
+                if stream:
+                    return read_stream(resp)
                 return json.loads(resp.read().decode())
+        except (http.client.RemoteDisconnected, ConnectionError) as e:
+            # A dropped connection is transient — retry it like any 5xx.
+            if attempt < MAX_ATTEMPTS:
+                wait = 2 ** attempt
+                print(f"connection dropped — retrying in {wait}s ({attempt}/{MAX_ATTEMPTS})",
+                      file=sys.stderr)
+                time.sleep(wait)
+                continue
+            sys.exit(
+                "ERROR: the network closed the connection before OpenAI responded "
+                f"({type(e).__name__}).\n"
+                "This usually means the render outran an idle timeout on your network path.\n"
+                "HINT: streaming is on by default and avoids this. If you passed --no-stream, "
+                "drop it, or retry with --quality medium."
+            )
         except urllib.error.HTTPError as e:
             detail = e.read().decode("utf-8", "ignore")
             if e.code in RETRY_STATUS and attempt < MAX_ATTEMPTS:
@@ -193,6 +250,11 @@ def main():
                     help=f"Longest edge in px (default {DEFAULT_MAX_EDGE}, max {MAX_EDGE_HARD})")
     ap.add_argument("--out", default="", help="Output dir or file (default ~/Downloads/arch-renders/)")
     ap.add_argument("--model", default=DEFAULT_MODEL, help=f"Model id (default {DEFAULT_MODEL})")
+    ap.add_argument("--no-stream", action="store_true",
+                    help="Wait for one whole response instead of streaming. A high-quality render "
+                         "can then exceed a 60s network idle timeout and be dropped.")
+    ap.add_argument("--partial-images", type=int, default=2, choices=[1, 2, 3],
+                    help="Partial images to stream (default 2). These keep the connection alive.")
     args = ap.parse_args()
 
     if not 16 <= args.max_edge <= MAX_EDGE_HARD:
@@ -204,12 +266,17 @@ def main():
     key = get_key()
     size = resolve_size(args.aspect, args.image, args.max_edge)
 
+    stream = not args.no_stream
     fields = {"model": args.model, "prompt": args.prompt, "size": size, "quality": args.quality}
     if args.image:
+        if stream:  # multipart values must be strings
+            fields.update(stream="true", partial_images=str(args.partial_images))
         body, ctype = multipart(fields, [("image[]", p) for p in args.image])
-        resp = call(EDITS, body, ctype, key)
+        resp = call(EDITS, body, ctype, key, stream=stream)
     else:
-        resp = call(GENERATIONS, json.dumps(fields).encode(), "application/json", key)
+        if stream:
+            fields.update(stream=True, partial_images=args.partial_images)
+        resp = call(GENERATIONS, json.dumps(fields).encode(), "application/json", key, stream=stream)
 
     data = (resp.get("data") or [{}])[0]
     b64 = data.get("b64_json")
