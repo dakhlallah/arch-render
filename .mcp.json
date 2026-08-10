@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "arch-render": {
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./mcp-server/dist/server.mjs"
+      ]
+    },
+    "magnific": {
+      "type": "http",
+      "url": "https://mcp.magnific.com",
+      "oauth_resource": "https://mcp.magnific.com"
+    }
+  }
+}

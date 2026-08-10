@@ -1,0 +1,28 @@
+{
+  "name": "arch-render",
+  "version": "1.1.0-rc.1+codex.20260810232829",
+  "description": "Preservation-first architectural analysis, visualization preparation, rendering workflows, documentation, and presentation support.",
+  "author": {
+    "name": "Dakhlallah"
+  },
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "ARCHI Rendering Studio Ultimate",
+    "shortDescription": "Preservation-first architectural intelligence.",
+    "longDescription": "Analyze and reverse-engineer architectural references, orchestrate preservation-first workflows, prepare renders and documentation, and create professional presentations with collaboration support.",
+    "developerName": "Dakhlallah",
+    "category": "Design",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "composerIcon": "./assets/logo.png",
+    "logo": "./assets/logo.png",
+    "defaultPrompt": [
+      "Make this architectural image photorealistic.",
+      "Create a golden-hour render prompt for this design.",
+      "Review this architecture project without redesigning it."
+    ]
+  }
+}

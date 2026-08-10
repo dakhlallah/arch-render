@@ -1,8 +1,9 @@
-# arch-render — ARCHI Rendering Studio
+# arch-render — ARCHI Rendering Studio Ultimate
 
-An agent skill that turns any architectural input — a floor plan, sketch, elevation, section, or a
-SketchUp / Revit / Rhino / D5 / Lumion / Enscape screenshot — into a premium visualization, or into a
-paste-ready prompt for Midjourney, DALL·E, Stable Diffusion or V-Ray.
+An English-language Codex plugin and standalone agent skill for preservation-first architectural
+analysis, visualization, documentation, portfolio production, presentation, and coordination support.
+It accepts floor plans, sketches, elevations, sections, renders, photographs, BIM/CAD exports, and
+screenshots from SketchUp, Revit, Rhino, D5, Lumion, Enscape, Blender, V-Ray, or similar tools.
 
 It enhances the project; it never redesigns it. Existing geometry, camera and layout are preserved
 unless you explicitly ask for a redesign.
@@ -31,11 +32,16 @@ architecture alone.
 were generated rather than drawn by hand — so they are cleaner than a real napkin sketch. The
 before → after transformation itself is genuine and reproducible.</sub>
 
-## Install
+## Install the standalone skill
 
 ```bash
 npx skills add dakhlallah/arch-render
 ```
+
+The complete Codex plugin bundle is also included in this repository. Its manifest is located at
+`.codex-plugin/plugin.json`, the skill at `skills/arch-render/`, and the bundled local MCP server at
+`mcp-server/`. The top-level `SKILL.md`, `references/`, `scripts/`, and `evals/` remain synchronized for
+backward compatibility with standalone skill installers.
 
 ## What it does
 
@@ -47,8 +53,13 @@ npx skills add dakhlallah/arch-render
   landscape, transport, workplace/retail, residential), area analysis, FF&E and space planning,
   lighting design, code and accessibility checks, structural/MEP/BIM coordination, specs, cost,
   buildability and sustainability. Coordination-level advice, never engineering sign-off.
+- **Publish** — curate evidence-supported architectural portfolios, competition booklets, project
+  monographs, presentation boards, material stories, room-by-room prompt libraries, and client-ready
+  editorial packages without fabricating missing drawings or project facts.
+- **Orchestrate** — maintain project context, preservation locks, traceability, environment routing,
+  prompt packs, optional Magnific workflows, and deterministic local knowledge tools.
 
-Works in English, French and Arabic.
+All user-facing instructions, prompts, workflows, and deliverables are produced in English.
 
 Not for logos, code, or video.
 
@@ -56,22 +67,29 @@ Not for logos, code, or video.
 
 No API key ships with this skill.
 
-- `scripts/render.py` and `scripts/board.py` read `OPENAI_API_KEY` from the environment:
+- `scripts/render.py` and `scripts/board.py` read `OPENAI_API_KEY` from the environment when their
+  corresponding workflows are used:
   ```bash
   export OPENAI_API_KEY=sk-...
   ```
-- The upscale / relight paths (`§88`, `§89`) call the **Magnific** MCP server. Those routes are
-  optional — everything else works without it.
+- Magnific is an optional MCP integration. The skill verifies availability, authentication, privacy,
+  cost, and attempt authorization before external execution.
+- The bundled `arch-render` MCP server performs local, read-only knowledge search, preservation briefs,
+  bounded prompt packs, and preservation-check decisions. It makes no paid provider calls.
 
 ## Layout
 
 ```
-SKILL.md                 entry point and routing table
-references/              prompt recipes, styles, render types, material catalog,
-                         production modes, advisory and technical references
+.codex-plugin/           Codex plugin manifest
+.mcp.json                local and optional MCP configuration
+skills/arch-render/      canonical packaged skill
+mcp-server/              bundled read-only Arch Render MCP server
+SKILL.md                 synchronized standalone entry point
+references/              synchronized workflow and domain modules
 references/typologies/   per-building-type briefs
-scripts/                 render.py, board.py
-evals/                   EVALS.md
+scripts/                 rendering and deterministic board utilities
+evals/                   production and safety evaluation cases
+agents/                  skill UI metadata
 ```
 
 ## License
