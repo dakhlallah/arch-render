@@ -38,10 +38,20 @@ before → after transformation itself is genuine and reproducible.</sub>
 npx skills add dakhlallah/arch-render
 ```
 
-The complete Codex plugin bundle is also included in this repository. Its manifest is located at
-`.codex-plugin/plugin.json`, the skill at `skills/arch-render/`, and the bundled local MCP server at
-`mcp-server/`. The top-level `SKILL.md`, `references/`, `scripts/`, and `evals/` remain synchronized for
-backward compatibility with standalone skill installers.
+The complete Codex plugin bundle is included at `plugins/arch-render/`, and the repository-level
+marketplace manifest is located at `.agents/plugins/marketplace.json`. The top-level `SKILL.md`,
+`references/`, `scripts/`, and `evals/` remain synchronized for backward compatibility with
+standalone skill installers.
+
+## Add to Codex as a marketplace
+
+In **Add plugin marketplace**, enter:
+
+- **Source:** `https://github.com/dakhlallah/arch-render.git`
+- **Git ref:** `codex/publish-arch-render-plugin` while testing this pull request; use `main` after it is merged
+- **Sparse paths:** leave blank
+
+After adding the marketplace, install `arch-render` from **ARCHI Rendering Studio**.
 
 ## What it does
 
@@ -82,16 +92,18 @@ The bundled MCP server requires Node.js 20 or newer.
 ## Layout
 
 ```
-.codex-plugin/           Codex plugin manifest
-.mcp.json                local and optional MCP configuration
-skills/arch-render/      canonical packaged skill
-mcp-server/              bundled read-only Arch Render MCP server
-SKILL.md                 synchronized standalone entry point
-references/              synchronized workflow and domain modules
-references/typologies/   per-building-type briefs
-scripts/                 rendering and deterministic board utilities
-evals/                   production and safety evaluation cases
-agents/                  skill UI metadata
+.agents/plugins/marketplace.json       Codex marketplace manifest
+plugins/arch-render/                   complete Codex plugin bundle
+plugins/arch-render/.codex-plugin/     plugin manifest
+plugins/arch-render/.mcp.json          local and optional MCP configuration
+plugins/arch-render/skills/            packaged skill
+plugins/arch-render/mcp-server/        bundled read-only Arch Render MCP server
+SKILL.md                               synchronized standalone entry point
+references/                            synchronized workflow and domain modules
+references/typologies/                 per-building-type briefs
+scripts/                               rendering and deterministic board utilities
+evals/                                 production and safety evaluation cases
+agents/                                standalone skill UI metadata
 ```
 
 ## License
