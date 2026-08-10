@@ -67,6 +67,8 @@ Not for logos, code, or video.
 
 No API key ships with this skill.
 
+The bundled MCP server requires Node.js 20 or newer.
+
 - `scripts/render.py` and `scripts/board.py` read `OPENAI_API_KEY` from the environment when their
   corresponding workflows are used:
   ```bash

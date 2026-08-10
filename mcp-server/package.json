@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "esbuild server.mjs --bundle --platform=node --format=esm --outfile=dist/server.mjs",
     "start": "node dist/server.mjs",
