@@ -9,8 +9,7 @@
     },
     "magnific": {
       "type": "http",
-      "url": "https://mcp.magnific.com",
-      "oauth_resource": "https://mcp.magnific.com"
+      "url": "https://mcp.magnific.com"
     }
   }
 }
