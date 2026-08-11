@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.png" alt="ARCHI Rendering Studio logo" width="150">
+  <img src="assets/archi-rendering-studio-hero.png" alt="ARCHI Rendering Studio Ultimate transforming a raw architectural model into a photorealistic visualization" width="100%">
 </p>
 
 <h1 align="center">ARCHI Rendering Studio Ultimate</h1>
@@ -48,26 +48,6 @@ It can help architects, interior designers, visualization artists, students, con
 
 > [!IMPORTANT]
 > Floor plans, geometry, room locations, circulation, structure, façades, floor count, and other approved design decisions remain locked unless the user explicitly authorizes a named change.
-
-## Visual examples
-
-### Exterior visualization
-
-Same camera, cantilever, ribbon window, punched windows, and external stair. Only materials, lighting, realism, and context were improved.
-
-| Source | Preservation-first result |
-|---|---|
-| ![Untextured massing model of a hillside house](assets/before-exterior.jpg) | ![Photoreal golden-hour visualization of the same house](assets/after-exterior.jpg) |
-
-### Interior visualization
-
-The glazed wall, stair, furniture positions, beams, fireplace, tree, mezzanine, and room relationships remain aligned with the source.
-
-| Source | Preservation-first result |
-|---|---|
-| ![Pencil concept sketch of a double-height living room](assets/before-interior.jpg) | ![Photoreal visualization of the same living room](assets/after-interior.jpg) |
-
-<sub>These demonstration inputs are synthetic. The before-and-after workflow is genuine and reproducible with the included rendering script.</sub>
 
 ## Installation
 
