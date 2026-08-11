@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 .env
 out/
+node_modules/
+npm-debug.log*

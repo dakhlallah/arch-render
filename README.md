@@ -1,8 +1,9 @@
-# arch-render — ARCHI Rendering Studio
+# arch-render — ARCHI Rendering Studio Ultimate
 
-An agent skill that turns any architectural input — a floor plan, sketch, elevation, section, or a
-SketchUp / Revit / Rhino / D5 / Lumion / Enscape screenshot — into a premium visualization, or into a
-paste-ready prompt for Midjourney, DALL·E, Stable Diffusion or V-Ray.
+An English-language Codex plugin and standalone agent skill for preservation-first architectural
+analysis, visualization, documentation, portfolio production, presentation, and coordination support.
+It accepts floor plans, sketches, elevations, sections, renders, photographs, BIM/CAD exports, and
+screenshots from SketchUp, Revit, Rhino, D5, Lumion, Enscape, Blender, V-Ray, or similar tools.
 
 It enhances the project; it never redesigns it. Existing geometry, camera and layout are preserved
 unless you explicitly ask for a redesign.
@@ -31,11 +32,26 @@ architecture alone.
 were generated rather than drawn by hand — so they are cleaner than a real napkin sketch. The
 before → after transformation itself is genuine and reproducible.</sub>
 
-## Install
+## Install the standalone skill
 
 ```bash
 npx skills add dakhlallah/arch-render
 ```
+
+The complete Codex plugin bundle is included at `plugins/arch-render/`, and the repository-level
+marketplace manifest is located at `.agents/plugins/marketplace.json`. The top-level `SKILL.md`,
+`references/`, `scripts/`, and `evals/` remain synchronized for backward compatibility with
+standalone skill installers.
+
+## Add to Codex as a marketplace
+
+In **Add plugin marketplace**, enter:
+
+- **Source:** `https://github.com/dakhlallah/arch-render.git`
+- **Git ref:** `codex/publish-arch-render-plugin` while testing this pull request; use `main` after it is merged
+- **Sparse paths:** leave blank
+
+After adding the marketplace, install `arch-render` from **ARCHI Rendering Studio**.
 
 ## What it does
 
@@ -47,8 +63,13 @@ npx skills add dakhlallah/arch-render
   landscape, transport, workplace/retail, residential), area analysis, FF&E and space planning,
   lighting design, code and accessibility checks, structural/MEP/BIM coordination, specs, cost,
   buildability and sustainability. Coordination-level advice, never engineering sign-off.
+- **Publish** — curate evidence-supported architectural portfolios, competition booklets, project
+  monographs, presentation boards, material stories, room-by-room prompt libraries, and client-ready
+  editorial packages without fabricating missing drawings or project facts.
+- **Orchestrate** — maintain project context, preservation locks, traceability, environment routing,
+  prompt packs, optional Magnific workflows, and deterministic local knowledge tools.
 
-Works in English, French and Arabic.
+All user-facing instructions, prompts, workflows, and deliverables are produced in English.
 
 Not for logos, code, or video.
 
@@ -56,22 +77,33 @@ Not for logos, code, or video.
 
 No API key ships with this skill.
 
-- `scripts/render.py` and `scripts/board.py` read `OPENAI_API_KEY` from the environment:
+The bundled MCP server requires Node.js 20 or newer.
+
+- `scripts/render.py` and `scripts/board.py` read `OPENAI_API_KEY` from the environment when their
+  corresponding workflows are used:
   ```bash
   export OPENAI_API_KEY=sk-...
   ```
-- The upscale / relight paths (`§88`, `§89`) call the **Magnific** MCP server. Those routes are
-  optional — everything else works without it.
+- Magnific is an optional MCP integration. The skill verifies availability, authentication, privacy,
+  cost, and attempt authorization before external execution.
+- The bundled `arch-render` MCP server performs local, read-only knowledge search, preservation briefs,
+  bounded prompt packs, and preservation-check decisions. It makes no paid provider calls.
 
 ## Layout
 
 ```
-SKILL.md                 entry point and routing table
-references/              prompt recipes, styles, render types, material catalog,
-                         production modes, advisory and technical references
-references/typologies/   per-building-type briefs
-scripts/                 render.py, board.py
-evals/                   EVALS.md
+.agents/plugins/marketplace.json       Codex marketplace manifest
+plugins/arch-render/                   complete Codex plugin bundle
+plugins/arch-render/.codex-plugin/     plugin manifest
+plugins/arch-render/.mcp.json          local and optional MCP configuration
+plugins/arch-render/skills/            packaged skill
+plugins/arch-render/mcp-server/        bundled read-only Arch Render MCP server
+SKILL.md                               synchronized standalone entry point
+references/                            synchronized workflow and domain modules
+references/typologies/                 per-building-type briefs
+scripts/                               rendering and deterministic board utilities
+evals/                                 production and safety evaluation cases
+agents/                                standalone skill UI metadata
 ```
 
 ## License
