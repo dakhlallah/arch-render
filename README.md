@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.png" alt="ARCHI Rendering Studio logo" width="150">
+  <img src="assets/archi-rendering-studio-hero.png" alt="ARCHI Rendering Studio Ultimate transforming a raw architectural model into a photorealistic visualization" width="100%">
 </p>
 
 <h1 align="center">ARCHI Rendering Studio Ultimate</h1>
@@ -14,6 +14,12 @@
   <img alt="Codex plugin" src="https://img.shields.io/badge/Codex-plugin-5B5BD6">
   <img alt="Node.js 20 or newer" src="https://img.shields.io/badge/Node.js-20%2B-339933?logo=nodedotjs&logoColor=white">
   <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-2563EB">
+</p>
+
+<p align="center">
+  <a href="#installation">
+    <img alt="Install ARCHI Render in Codex" src="https://img.shields.io/badge/Install_ARCHI_Render_in_Codex-111111?style=for-the-badge&logo=openai&logoColor=white">
+  </a>
 </p>
 
 <p align="center">
@@ -43,27 +49,21 @@ It can help architects, interior designers, visualization artists, students, con
 > [!IMPORTANT]
 > Floor plans, geometry, room locations, circulation, structure, façades, floor count, and other approved design decisions remain locked unless the user explicitly authorizes a named change.
 
-## Visual examples
-
-### Exterior visualization
-
-Same camera, cantilever, ribbon window, punched windows, and external stair. Only materials, lighting, realism, and context were improved.
-
-| Source | Preservation-first result |
-|---|---|
-| ![Untextured massing model of a hillside house](assets/before-exterior.jpg) | ![Photoreal golden-hour visualization of the same house](assets/after-exterior.jpg) |
-
-### Interior visualization
-
-The glazed wall, stair, furniture positions, beams, fireplace, tree, mezzanine, and room relationships remain aligned with the source.
-
-| Source | Preservation-first result |
-|---|---|
-| ![Pencil concept sketch of a double-height living room](assets/before-interior.jpg) | ![Photoreal visualization of the same living room](assets/after-interior.jpg) |
-
-<sub>These demonstration inputs are synthetic. The before-and-after workflow is genuine and reproducible with the included rendering script.</sub>
-
 ## Installation
+
+> [!NOTE]
+> Codex requires users to confirm a third-party Git marketplace before installing from it. A public website cannot silently bypass that security confirmation. The button above opens these verified installation steps.
+
+### Fastest supported install
+
+Copy both lines with GitHub's copy button, paste them into a terminal, and approve the marketplace if Codex asks:
+
+```bash
+codex plugin marketplace add https://github.com/dakhlallah/arch-render.git --ref main
+codex plugin add arch-render@arch-render-marketplace
+```
+
+Then start a new Codex task so the plugin's skill and MCP tools load into a fresh context.
 
 ### Option 1 — Codex app
 
@@ -77,16 +77,7 @@ Open **Add plugin marketplace** and enter:
 
 Add the marketplace, then install **arch-render** from **ARCHI Rendering Studio**.
 
-### Option 2 — Codex CLI
-
-```bash
-codex plugin marketplace add https://github.com/dakhlallah/arch-render.git --ref main
-codex plugin add arch-render@arch-render-marketplace
-```
-
-Start a new Codex task after installation so the skill and MCP tools load into a fresh context.
-
-### Option 3 — Standalone skill
+### Option 2 — Standalone skill
 
 If you only need the agent skill without the complete plugin bundle:
 
